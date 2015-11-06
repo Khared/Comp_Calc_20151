@@ -2,13 +2,12 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "y.tab.h"
 
-extern YYSTYPE yylval;
 %}
 
 id [_a-zA-Z][a-zA-Z0-9_]*
-numero [0-9]+("."[0-9]+)*
+digito	[0-9]
+numero	{digito}+
 
 %%
 
@@ -35,20 +34,9 @@ numero [0-9]+("."[0-9]+)*
 "="		return ATRIBUI;
 "("		return LPAREN;
 ")"		return RPAREN;
+{id}		return ID;
+{numero}	{ yylval = atoi(yytext); return NUM;}
 
-{id}	{
-	yylval.token = new_token();
-	(yylval.token)->value.name = copy_str(yytext);
-	(yylval.token)->lineno = yylineno;
-	return ID;
-        }
-
-{numero}	{
-		yylval.token = new_token();
-		(yylval.token)->value.val = atoi(yytext);
-		return NUM;
-		}
-
-.	printf("Erro lexico [ '%s' ] na linha %d\n", yytext, yylineno);
+.	printf("Erro lexico!\nCaractere nao reconhecido: %s", yytext);
 
 %%
