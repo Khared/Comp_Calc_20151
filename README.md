@@ -1,1 +1,1 @@
-# Comp_Calc_20151
+# Desenvolvimento de Calculadora para a disciplina de Compiladores - 2015.1
