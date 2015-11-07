@@ -18,7 +18,7 @@
 %token <symbol> ID
 
 %type <node> stmts stmt while_decl if_decl attrib_decl
-%type <node> bool expr factor
+%type <node> expr
 
 %left <operator>IGUAL NEQ
 %left GE MAIOR LE MENOR
