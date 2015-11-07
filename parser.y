@@ -34,7 +34,7 @@
 
 %%
 
-expr:	exp IGUAL exp	{ $$ = new_ast_equality_node ($2, $1, $3); }
+exp:	exp IGUAL exp	{ $$ = new_ast_equality_node ($2, $1, $3); }
 	| exp MAIS exp	{ $$ = new_ast_node ('+', $1, $3); }
 	| exp MENOS exp	{ $$ = new_ast_node ('-', $1, $3);}
 	| exp VEZES exp	{ $$ = new_ast_node ('*', $1, $3); }
@@ -42,6 +42,13 @@ expr:	exp IGUAL exp	{ $$ = new_ast_equality_node ($2, $1, $3); }
 	| LPAREN exp RPAREN	{ $$ = $2; }
 	| '-' exp %prec UMINUS	{ $$ = new_ast_node ('M', $2, NULL); }
 	| NUM	{ $$ = new_ast_number_node ($1); }
+	| exp AND exp
+	| exp OR exp
+	| exp NEQ exp
+	| exp GE exp
+	| exp LE exp
+	| exp MENOR exp
+	| exp MAIOR exp
 	| ID	{ $$ = new_ast_symbol_reference_node ($1); }
 	| ID ATRIBUI exp	{ $$ = new_ast_assignment_node ($1, $3); }
 	;
@@ -52,10 +59,11 @@ exp_list: exp
 
 statement: selection_statement
 	| iteration_statement
+	//| ID ATRIBUI exp	{ $$ = new_ast_assignment_node ($1, $3); }	//Adicionei Isso
 	;
 
-selection_statement: IF LPAREN exp RPAREN statement	{	$$ = new_ast_if_node ($3, $5, NULL);	}
-		| IF LPAREN exp RPAREN statement ELSE statement	{	$$ = new_ast_if_node ($3, $5, $7);	}
+selection_statement: IF LPAREN exp RPAREN THEN statement	{	$$ = new_ast_if_node ($3, $6, NULL);	}
+		| IF LPAREN exp RPAREN THEN statement ELSE statement	{	$$ = new_ast_if_node ($3, $5, $7);	}
 		;
 
 iteration_statement: WHILE LPAREN exp RPAREN statement { $$ = new_ast_while_node ($3, $5); }
