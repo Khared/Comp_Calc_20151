@@ -42,8 +42,8 @@ expr:	exp IGUAL exp	{ $$ = new_ast_equality_node ($2, $1, $3); }
 	| LPAREN exp RPAREN	{ $$ = $2; }
 	| '-' exp %prec UMINUS	{ $$ = new_ast_node ('M', $2, NULL); }
 	| NUM	{ $$ = new_ast_number_node ($1); }
-	| NAME	{ $$ = new_ast_symbol_reference_node ($1); }
-	| NAME ATRIBUI exp	{ $$ = new_ast_assignment_node ($1, $3); }
+	| ID	{ $$ = new_ast_symbol_reference_node ($1); }
+	| ID ATRIBUI exp	{ $$ = new_ast_assignment_node ($1, $3); }
 	;
 
 exp_list: exp
@@ -63,7 +63,7 @@ iteration_statement: WHILE LPAREN exp RPAREN statement { $$ = new_ast_while_node
 
 %%
 
-void yyerror(const char * s, ...) {
-  printf("syntax error: %s\n", s);
-  return;
+void yyerror(const char *s) {
+	printf("syntax error: %s\n", s);
+	exit(1);
 }
