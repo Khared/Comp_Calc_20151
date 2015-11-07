@@ -17,9 +17,6 @@
 %token <number> NUM
 %token <symbol> ID
 
-%type <node> stmts stmt while_decl if_decl attrib_decl
-%type <node> expr
-
 %left <operator>IGUAL NEQ
 %left GE MAIOR LE MENOR
 %left MULT DIV
@@ -37,7 +34,7 @@
 exp:	exp IGUAL exp	{ $$ = new_ast_equality_node ($2, $1, $3); }
 	| exp MAIS exp	{ $$ = new_ast_node ('+', $1, $3); }
 	| exp MENOS exp	{ $$ = new_ast_node ('-', $1, $3);}
-	| exp VEZES exp	{ $$ = new_ast_node ('*', $1, $3); }
+	| exp MULT exp	{ $$ = new_ast_node ('*', $1, $3); }
 	| exp DIV exp	{ $$ = new_ast_node ('/', $1, $3); }
 	| LPAREN exp RPAREN	{ $$ = $2; }
 	| '-' exp %prec UMINUS	{ $$ = new_ast_node ('M', $2, NULL); }
@@ -63,7 +60,7 @@ statement: selection_statement
 	;
 
 selection_statement: IF LPAREN exp RPAREN THEN statement	{	$$ = new_ast_if_node ($3, $6, NULL);	}
-		| IF LPAREN exp RPAREN THEN statement ELSE statement	{	$$ = new_ast_if_node ($3, $5, $7);	}
+		| IF LPAREN exp RPAREN THEN statement ELSE statement	{	$$ = new_ast_if_node ($3, $6, $8);	}
 		;
 
 iteration_statement: WHILE LPAREN exp RPAREN statement { $$ = new_ast_while_node ($3, $5); }
